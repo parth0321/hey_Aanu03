@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chocolate Day 🍫</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#5a2d0c,#2b1506);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(18px);
+    border-radius:25px;
+    padding:38px 25px;
+    text-align:center;
+    width:90%;
+    max-width:460px;
+    box-shadow:0 0 30px rgba(255,200,150,0.4);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+h1{
+    font-size:30px;
+}
+
+.time-msg{
+    margin-top:6px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+p{
+    margin-top:14px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* CHOCOLATE BOX */
+.box{
+    margin:25px auto;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:12px;
+}
+
+.choco{
+    background:linear-gradient(135deg,#6f3b16,#3b1f0b);
+    border-radius:12px;
+    height:75px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:24px;
+    position:relative;
+    overflow:hidden;
+    transition:0.3s;
+}
+
+.choco:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 12px rgba(255,200,150,0.6);
+}
+
+.choco span{
+    display:none;
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.85);
+    border-radius:12px;
+    padding:8px;
+    font-size:13px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+}
+
+/* SPARKLE PARTICLES */
+.sparkle{
+    position:absolute;
+    font-size:14px;
+    animation:floatUp linear infinite;
+    opacity:0.5;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(110vh);opacity:0;}
+    50%{opacity:0.5;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.7);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="mainContent">
+    <h1>Happy Chocolate Day 🍫❤️</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        Just like chocolate,<br>
+        you make every moment sweeter 💖<br><br>
+        Tap each piece to unwrap my love 🍬
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <div class="box">
+        <div class="choco" onclick="reveal(this)">🍫<span>Your smile melts my heart 💕</span></div>
+        <div class="choco" onclick="reveal(this)">🍫<span>You make my bad days brighter ✨</span></div>
+        <div class="choco" onclick="reveal(this)">🍫<span>You understand me without words 🤍</span></div>
+        <div class="choco" onclick="reveal(this)">🍫<span>You’re my comfort place 🫶</span></div>
+        <div class="choco" onclick="reveal(this)">🍫<span>You are my sweetest addiction 😍</span></div>
+        <div class="choco" onclick="reveal(this)">🍫<span>I choose you, every single day 💖</span></div>
+    </div>
+</div>
+
+<div class="secret" id="secretMsg">
+💌 I would still choose you… in every lifetime ❤️
+</div>
+
+<script>
+
+/* TIME AWARE MESSAGE */
+const timeMsg=document.getElementById("timeMsg");
+const hour=new Date().getHours();
+
+if(hour<12) timeMsg.innerHTML="Sweet Morning Sunshine ☀️";
+else if(hour<17) timeMsg.innerHTML="Afternoon sweetness just for you 💕";
+else if(hour<21) timeMsg.innerHTML="Evenings taste better with you 🌆";
+else timeMsg.innerHTML="Late night cravings… and it’s you 😘";
+
+/* ROTATING SWEET LINES */
+const messages=[
+"🍫 You are sweeter than chocolate.",
+"💖 Loving you feels warm and rich.",
+"✨ You’re my daily dose of happiness.",
+"🤎 Every moment with you melts my heart.",
+"💕 With you, life tastes better.",
+"😍 You’re my favorite flavor of forever."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* COCOA SPARKLES */
+for(let j=0;j<25;j++){
+let s=document.createElement("div");
+s.className="sparkle";
+s.innerText="✨";
+s.style.left=Math.random()*100+"vw";
+s.style.animationDuration=(5+Math.random()*6)+"s";
+document.body.appendChild(s);
+}
+
+/* HEART CURSOR */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="💖";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* CLICK TO REVEAL */
+function reveal(el){
+el.querySelector("span").style.display="flex";
+}
+
+/* SECRET LONG PRESS */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+</script>
+
+</body>
+</html>

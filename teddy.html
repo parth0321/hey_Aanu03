@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teddy Day 🧸</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#ffe6ea,#ff9fb2);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#5a2a2a;
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(16px);
+    border-radius:30px;
+    padding:38px 25px;
+    text-align:center;
+    width:90%;
+    max-width:430px;
+    box-shadow:0 0 35px rgba(255,150,180,0.6);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+/* TEDDY FLOAT */
+.teddy{
+    font-size:95px;
+    animation:floatTeddy 4s ease-in-out infinite;
+}
+
+@keyframes floatTeddy{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-14px);}
+}
+
+h1{
+    margin-top:12px;
+    font-size:28px;
+}
+
+.time-msg{
+    margin-top:6px;
+    font-size:14px;
+    opacity:0.8;
+}
+
+p{
+    margin-top:14px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* BUTTON */
+button{
+    margin-top:25px;
+    padding:13px 30px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff8fab,#ff5f8a);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 18px rgba(255,120,160,0.7);
+}
+
+/* BIG HUG EFFECT */
+.hug{
+    animation:hug 0.7s ease-in-out;
+}
+
+@keyframes hug{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.08);}
+    100%{transform:scale(1);}
+}
+
+/* FLOATING PLUSH PARTICLES */
+.plush{
+    position:absolute;
+    font-size:18px;
+    animation:floatUp linear infinite;
+    opacity:0.4;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(110vh);opacity:0;}
+    50%{opacity:0.4;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.65);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+    color:white;
+}
+
+/* LOCK SCREEN */
+.lock-screen{
+    display:none;
+    text-align:center;
+    padding:30px;
+    color:white;
+}
+
+.timer{
+    margin-top:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+    <h1>🧸 Teddy Day is almost here</h1>
+    <p>Your teddy is getting ready to hug you 🤍</p>
+    <div class="timer" id="countdown"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="card" id="mainContent">
+    <div class="teddy">🧸</div>
+    <h1>Happy Teddy Day 🤍</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        Whenever I can’t be there to hug you,<br>
+        let this teddy do it for me 🫶<br><br>
+        Close your eyes… and feel the warmth 🤗
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <button onclick="hugMe()">Hug Me 🤗</button>
+</div>
+
+<div class="secret" id="secretMsg">
+💌 If I could, I would hug you right now and never let go 🤍
+</div>
+
+<script>
+
+/* MODE CHECK */
+const params = new URLSearchParams(window.location.search);
+const fromDashboard = params.get("from") === "dashboard";
+
+const main = document.getElementById("mainContent");
+const lock = document.getElementById("lockScreen");
+
+/* DATE */
+const unlockDate = new Date("2026-02-10T00:00:00");
+
+if(fromDashboard){
+    main.style.display="none";
+    lock.style.display="block";
+    startCountdown();
+}
+
+function startCountdown(){
+    const cd=document.getElementById("countdown");
+    setInterval(()=>{
+        const now=new Date().getTime();
+        const diff=unlockDate-now;
+
+        if(diff<=0){
+            cd.innerHTML="🧸 Unlocked!";
+            return;
+        }
+
+        const h=Math.floor(diff/(1000*60*60));
+        const m=Math.floor((diff/(1000*60))%60);
+        const s=Math.floor((diff/1000)%60);
+
+        cd.innerHTML=`${h}h ${m}m ${s}s`;
+    },1000);
+}
+
+/* TIME AWARE MESSAGE */
+const timeMsg=document.getElementById("timeMsg");
+const hour=new Date().getHours();
+
+if(hour<12) timeMsg.innerHTML="Good Morning, my soft sunshine ☀️";
+else if(hour<17) timeMsg.innerHTML="Afternoon cuddles incoming 💕";
+else if(hour<21) timeMsg.innerHTML="Evening hugs just for you 🌆";
+else timeMsg.innerHTML="Late night? Come here, virtual hug 🤍";
+
+/* ROTATING WARM MESSAGES */
+const messages=[
+"🧸 You are my safe place.",
+"🤍 With you, I feel home.",
+"💕 Your hugs fix everything.",
+"✨ Even distance can't stop this warmth.",
+"🫶 I miss holding your hand."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* FLOATING PLUSH PARTICLES */
+for(let j=0;j<25;j++){
+let p=document.createElement("div");
+p.className="plush";
+p.innerText="🤍";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(6+Math.random()*6)+"s";
+document.body.appendChild(p);
+}
+
+/* HEART CURSOR */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="💗";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* HUG BUTTON */
+function hugMe(){
+    main.classList.add("hug");
+    setTimeout(()=>main.classList.remove("hug"),700);
+    alert("🤗 A warm teddy hug just for you ❤️");
+}
+
+/* SECRET LONG PRESS */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rose Day 🌹</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    height:100vh;
+    background:linear-gradient(135deg,#ff758c,#ff9a9e,#fad0c4);
+    background-size:400% 400%;
+    animation:bgMove 10s ease infinite;
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+}
+
+@keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+/* CARD */
+.card{
+    background:rgba(255,255,255,0.2);
+    backdrop-filter:blur(18px);
+    padding:35px;
+    border-radius:25px;
+    text-align:center;
+    width:90%;
+    max-width:420px;
+    box-shadow:0 0 30px rgba(255,255,255,0.4);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.8);}
+    to{opacity:1;transform:scale(1);}
+}
+
+.rose{
+    font-size:80px;
+    animation:bloom 3s ease-in-out infinite;
+    filter:drop-shadow(0 0 12px #ff4d6d);
+}
+
+@keyframes bloom{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.25);}
+}
+
+h1{
+    margin-top:12px;
+    font-size:28px;
+}
+
+.time-msg{
+    margin-top:8px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+p{
+    margin-top:15px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    opacity:0.95;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* HOLD BUTTON */
+button{
+    margin-top:22px;
+    padding:14px 28px;
+    border:none;
+    border-radius:30px;
+    background:#ff4d6d;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+button::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:0;
+    height:100%;
+    width:0%;
+    background:rgba(255,255,255,0.3);
+    transition:width 1.5s linear;
+}
+
+button.holding::after{
+    width:100%;
+}
+
+/* PARTICLES (ROSE PETALS) */
+.petal{
+    position:absolute;
+    top:-10px;
+    font-size:18px;
+    animation:fall linear infinite;
+}
+
+@keyframes fall{
+    0%{transform:translateY(0);}
+    100%{transform:translateY(110vh);}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.6);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="mainContent">
+    <div class="rose">🌹</div>
+    <h1>Happy Rose Day ❤️</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        This rose has no thorns,<br>
+        because it bloomed from my heart 🌸<br><br>
+        Every petal carries a whisper of love for you 💖
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <button id="holdBtn">Hold to Accept My Rose 🌹</button>
+</div>
+
+<div class="secret" id="secretMsg">
+    💌 I made this whole world just to see you smile ❤️
+</div>
+
+<script>
+/* ---------------- TIME AWARE MESSAGE ---------------- */
+const timeMsg = document.getElementById("timeMsg");
+const hour = new Date().getHours();
+
+if(hour < 12) timeMsg.innerHTML="Good Morning Beautiful ☀️";
+else if(hour < 17) timeMsg.innerHTML="Good Afternoon My Love 💕";
+else if(hour < 21) timeMsg.innerHTML="Good Evening Sweetheart 🌆";
+else timeMsg.innerHTML="Still awake thinking of me? 🌙";
+
+/* ---------------- ROTATING EXTRA MESSAGES ---------------- */
+const messages = [
+"🌹 You are the reason my heart blooms.",
+"💖 Every day with you feels like spring.",
+"✨ You make ordinary moments magical.",
+"🌸 Loving you is my favorite habit."
+];
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* ---------------- ROSE PETALS ---------------- */
+for(let j=0;j<20;j++){
+let p=document.createElement("div");
+p.className="petal";
+p.innerText="🌹";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(5+Math.random()*5)+"s";
+document.body.appendChild(p);
+}
+
+/* ---------------- HEART CURSOR TRAIL ---------------- */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="💖";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* ---------------- HOLD TO FEEL BUTTON ---------------- */
+let holdBtn=document.getElementById("holdBtn");
+let holdTimer;
+
+holdBtn.addEventListener("mousedown",()=>{
+holdBtn.classList.add("holding");
+holdTimer=setTimeout(()=>{
+alert("🌹 This rose is yours forever ❤️");
+},1500);
+});
+
+holdBtn.addEventListener("mouseup",()=>{
+holdBtn.classList.remove("holding");
+clearTimeout(holdTimer);
+});
+
+/* MOBILE SUPPORT */
+holdBtn.addEventListener("touchstart",()=>{
+holdBtn.classList.add("holding");
+holdTimer=setTimeout(()=>{
+alert("🌹 This rose is yours forever ❤️");
+},1500);
+});
+
+holdBtn.addEventListener("touchend",()=>{
+holdBtn.classList.remove("holding");
+clearTimeout(holdTimer);
+});
+
+/* ---------------- LONG PRESS SECRET ---------------- */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+</script>
+
+</body>
+</html>

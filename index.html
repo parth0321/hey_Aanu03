@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine Week 💖</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #ff758c, #ff7eb3, #ff4d6d, #ff9a9e);
+    background-size: 400% 400%;
+    animation: gradientMove 12s ease infinite;
+    overflow-x: hidden;
+    padding: 20px;
+    color: white;
+}
+
+@keyframes gradientMove {
+    0%{ background-position: 0% 50%; }
+    50%{ background-position: 100% 50%; }
+    100%{ background-position: 0% 50%; }
+}
+
+/* HEADER */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: fadeIn 2s ease;
+}
+.header h1 {
+    font-size: 34px;
+}
+.header p {
+    margin-top: 8px;
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 20px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(15px);
+    border-radius: 22px;
+    padding: 22px 12px;
+    text-align: center;
+    transition: 0.4s;
+    position: relative;
+    box-shadow: 0 0 15px rgba(255,255,255,0.2);
+}
+
+.card:hover {
+    transform: translateY(-6px) scale(1.05);
+}
+
+/* LOCKED */
+.card.locked {
+    opacity: 0.6;
+    cursor: pointer;
+}
+
+/* UNLOCKED */
+.card.unlocked {
+    cursor: pointer;
+    box-shadow: 0 0 25px rgba(255,255,255,0.5);
+}
+
+.emoji {
+    font-size: 42px;
+}
+
+.day-name {
+    margin-top: 8px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.timer {
+    margin-top: 8px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
+/* FLOATING HEARTS */
+.heart {
+    position: fixed;
+    width: 14px;
+    height: 14px;
+    background: #ff1f4a;
+    transform: rotate(45deg);
+    animation: float 7s linear infinite;
+    opacity: 0.4;
+}
+.heart::before,
+.heart::after {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: #ff1f4a;
+    border-radius: 50%;
+}
+.heart::before { top: -7px; }
+.heart::after { left: -7px; }
+
+@keyframes float {
+    0% { transform: translateY(100vh) rotate(45deg); }
+    100% { transform: translateY(-10vh) rotate(45deg); }
+}
+
+/* FADE */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* FOOTER */
+.footer {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 14px;
+    opacity: 0.9;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Floating Hearts -->
+<script>
+for (let i = 0; i < 25; i++) {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+    document.body.appendChild(heart);
+}
+</script>
+
+<div class="header">
+    <h1>💖 Valentine Week 💖</h1>
+    <p>Every day brings you closer to something special… ✨</p>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<div class="footer">
+    Made with infinite love ❤️
+</div>
+
+<script>
+const days = [
+    { name: "Rose Day", emoji: "🌹", file: "rose.html", date: "2026-02-07",
+      waitMsg: "🌹 A rose is still blooming… wait till Feb 7 💕" },
+    { name: "Propose Day", emoji: "💍", file: "propose.html", date: "2026-02-08",
+      waitMsg: "💍 The perfect proposal needs perfect timing… Feb 8 ❤️" },
+    { name: "Chocolate Day", emoji: "🍫", file: "chocolate.html", date: "2026-02-09",
+      waitMsg: "🍫 Sweetness is preparing… Feb 9 😋" },
+    { name: "Teddy Day", emoji: "🧸", file: "teddy.html", date: "2026-02-10",
+      waitMsg: "🧸 Your teddy is getting ready for a hug on Feb 10 🤗" },
+    { name: "Promise Day", emoji: "🤍", file: "promise.html", date: "2026-02-11",
+      waitMsg: "🤍 Promises must wait for the right day… Feb 11 💞" },
+    { name: "Hug Day", emoji: "🤗", file: "hug.html", date: "2026-02-12",
+      waitMsg: "🤗 That warm hug is coming on Feb 12 🫶" },
+    { name: "Kiss Day", emoji: "💋", file: "kiss.html", date: "2026-02-13",
+      waitMsg: "💋 A soft kiss awaits you on Feb 13 😘" },
+    { name: "Valentine’s Day", emoji: "💘", file: "valentine.html", date: "2026-02-14",
+      waitMsg: "💘 The final surprise unlocks on Feb 14 ❤️" }
+];
+
+const grid = document.getElementById("grid");
+
+function updateDashboard() {
+    grid.innerHTML = "";
+    const now = new Date();
+
+    days.forEach(day => {
+        const unlockTime = new Date(day.date + "T00:00:00");
+        const card = document.createElement("div");
+        card.className = "card";
+
+        if (now >= unlockTime) {
+            card.classList.add("unlocked");
+            card.innerHTML = `
+                <div class="emoji">${day.emoji}</div>
+                <div class="day-name">${day.name}</div>
+            `;
+            card.onclick = () => {
+                window.location.href = day.file + "?from=dashboard";
+            };
+        } else {
+            card.classList.add("locked");
+            const diff = unlockTime - now;
+            const h = Math.floor(diff / (1000 * 60 * 60));
+            const m = Math.floor((diff / (1000 * 60)) % 60);
+            const s = Math.floor((diff / 1000) % 60);
+
+            card.innerHTML = `
+                <div class="emoji">🔒</div>
+                <div class="day-name">${day.name}</div>
+                <div class="timer">${h}h ${m}m ${s}s</div>
+            `;
+
+            card.onclick = () => {
+                if (navigator.vibrate) {
+                    navigator.vibrate(200);
+                }
+                alert(day.waitMsg);
+            };
+        }
+
+        grid.appendChild(card);
+    });
+}
+
+updateDashboard();
+setInterval(updateDashboard, 1000);
+</script>
+
+</body>
+</html>

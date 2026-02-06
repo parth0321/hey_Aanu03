@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kiss Day 💋</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#1a0005,#000000);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#ffd6e0;
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,0,60,0.1);
+    backdrop-filter:blur(18px);
+    border-radius:32px;
+    padding:42px 28px;
+    text-align:center;
+    width:92%;
+    max-width:470px;
+    box-shadow:0 0 45px rgba(255,60,100,0.5);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+/* BIG KISS */
+.big-kiss{
+    font-size:95px;
+    animation:pulse 3s ease-in-out infinite;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.12);}
+}
+
+h1{
+    margin-top:14px;
+    font-size:28px;
+}
+
+.time-msg{
+    margin-top:6px;
+    font-size:14px;
+    opacity:0.85;
+}
+
+p{
+    margin-top:18px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* BUTTON */
+button{
+    margin-top:30px;
+    padding:13px 32px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff4d6d,#c9184a);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 25px rgba(255,80,120,0.8);
+}
+
+/* KISS EFFECT */
+.kiss-effect{
+    animation:kissGlow 0.8s ease-in-out;
+}
+
+@keyframes kissGlow{
+    0%{box-shadow:0 0 45px rgba(255,60,100,0.5);}
+    50%{box-shadow:0 0 90px rgba(255,80,120,1);}
+    100%{box-shadow:0 0 45px rgba(255,60,100,0.5);}
+}
+
+/* FLOATING KISS PARTICLES */
+.kiss{
+    position:absolute;
+    font-size:20px;
+    animation:floatUp linear infinite;
+    opacity:0.4;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(110vh);opacity:0;}
+    50%{opacity:0.4;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.75);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+    color:white;
+}
+
+/* LOCK SCREEN */
+.lock-screen{
+    display:none;
+    text-align:center;
+    padding:30px;
+    color:#ffd6e0;
+}
+
+.timer{
+    margin-top:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+    <h1>💋 Kiss Day is almost here</h1>
+    <p>This moment is meant to be felt…</p>
+    <div class="timer" id="countdown"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="card" id="mainContent">
+    <div class="big-kiss">💋</div>
+    <h1>Happy Kiss Day ❤️</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        This kiss carries everything I can’t say in words…<br><br>
+        All my love,<br>
+        all my longing,<br>
+        straight to you 💞
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <button onclick="sendKiss()">Send a Kiss 💋</button>
+</div>
+
+<div class="secret" id="secretMsg">
+💌 If distance disappeared for a second… I know what I’d do first 💋
+</div>
+
+<script>
+
+/* MODE CHECK */
+const params=new URLSearchParams(window.location.search);
+const fromDashboard=params.get("from")==="dashboard";
+
+const main=document.getElementById("mainContent");
+const lock=document.getElementById("lockScreen");
+
+const unlockDate=new Date("2026-02-13T00:00:00");
+
+if(fromDashboard){
+    main.style.display="none";
+    lock.style.display="block";
+    startCountdown();
+}
+
+function startCountdown(){
+    const cd=document.getElementById("countdown");
+    setInterval(()=>{
+        const now=new Date().getTime();
+        const diff=unlockDate-now;
+
+        if(diff<=0){
+            cd.innerHTML="💋 Unlocked!";
+            return;
+        }
+
+        const h=Math.floor(diff/(1000*60*60));
+        const m=Math.floor((diff/(1000*60))%60);
+        const s=Math.floor((diff/1000)%60);
+
+        cd.innerHTML=`${h}h ${m}m ${s}s`;
+    },1000);
+}
+
+/* TIME AWARE MESSAGE */
+const hour=new Date().getHours();
+const timeMsg=document.getElementById("timeMsg");
+
+if(hour<12) timeMsg.innerHTML="Good Morning… come closer 💋";
+else if(hour<17) timeMsg.innerHTML="Afternoon kiss just for you 💞";
+else if(hour<21) timeMsg.innerHTML="Evening feels romantic tonight 🌆";
+else timeMsg.innerHTML="Late night kisses hit deeper 🌙";
+
+/* ROTATING INTENSE LINES */
+const messages=[
+"💞 A kiss can say what words cannot.",
+"❤️ Every kiss feels like magic.",
+"✨ You make my heart race.",
+"💋 This moment is ours.",
+"💕 I wish this wasn’t virtual."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* FLOATING KISSES */
+for(let j=0;j<25;j++){
+let k=document.createElement("div");
+k.className="kiss";
+k.innerHTML="💋";
+k.style.left=Math.random()*100+"vw";
+k.style.animationDuration=(6+Math.random()*7)+"s";
+document.body.appendChild(k);
+}
+
+/* HEART CURSOR */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="❤️";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* SEND KISS */
+function sendKiss(){
+    main.classList.add("kiss-effect");
+    setTimeout(()=>main.classList.remove("kiss-effect"),800);
+    alert("💋 A soft, loving kiss just reached you ❤️");
+}
+
+/* SECRET LONG PRESS */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+</script>
+
+</body>
+</html>

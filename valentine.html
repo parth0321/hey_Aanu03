@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine’s Day 💖</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#1b0010,#000);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    color:#ffd6e0;
+}
+
+/* INTRO */
+.intro{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:radial-gradient(circle at top,#2b0015,#000);
+    z-index:10;
+    animation:introFadeOut 1s ease forwards;
+    animation-delay:28s;
+}
+
+@keyframes introFadeOut{
+    to{opacity:0;visibility:hidden;}
+}
+
+.day-slide{
+    position:absolute;
+    text-align:center;
+    opacity:0;
+    animation:dayAnim 4s ease-in-out forwards;
+}
+
+.day-slide span{font-size:80px;}
+.day-slide p{margin-top:15px;font-size:18px;}
+
+@keyframes dayAnim{
+    0%{opacity:0;transform:scale(0.9);}
+    25%{opacity:1;transform:scale(1);}
+    75%{opacity:1;}
+    100%{opacity:0;transform:scale(1.1);}
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,0,60,0.12);
+    backdrop-filter:blur(18px);
+    border-radius:34px;
+    padding:45px 30px;
+    text-align:center;
+    width:92%;
+    max-width:500px;
+    animation:fadeIn 2s ease;
+    box-shadow:0 0 60px rgba(255,60,100,0.6);
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+.big-heart{
+    font-size:100px;
+    animation:pulse 3s infinite;
+}
+
+@keyframes pulse{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.15);}
+}
+
+h1{margin-top:14px;font-size:30px;}
+
+.time-msg{
+    margin-top:8px;
+    font-size:14px;
+    opacity:0.85;
+}
+
+p{
+    margin-top:18px;
+    line-height:1.8;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:14px;
+    font-style:italic;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* BUTTONS */
+button{
+    padding:14px 36px;
+    border:none;
+    border-radius:32px;
+    color:white;
+    font-size:17px;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{transform:scale(1.1);}
+
+/* FLOATING HEART PARTICLES */
+.heart{
+    position:absolute;
+    font-size:18px;
+    animation:floatUp linear infinite;
+    opacity:0.4;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(110vh);opacity:0;}
+    50%{opacity:0.4;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.8);
+    padding:12px 22px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+}
+
+/* LOCK SCREEN */
+.lock-screen{
+    display:none;
+    text-align:center;
+    padding:30px;
+}
+
+.timer{
+    margin-top:18px;
+    font-size:22px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- INTRO (unchanged) -->
+<div class="intro">
+    <div class="day-slide" style="animation-delay:0s"><span>🌹</span><p>Rose Day — Love bloomed</p></div>
+    <div class="day-slide" style="animation-delay:4s"><span>💍</span><p>Propose Day — Hearts promised</p></div>
+    <div class="day-slide" style="animation-delay:8s"><span>🍫</span><p>Chocolate Day — Sweet moments</p></div>
+    <div class="day-slide" style="animation-delay:12s"><span>🧸</span><p>Teddy Day — Comfort & warmth</p></div>
+    <div class="day-slide" style="animation-delay:16s"><span>🤍</span><p>Promise Day — Forever words</p></div>
+    <div class="day-slide" style="animation-delay:20s"><span>🤗</span><p>Hug Day — Closer than ever</p></div>
+    <div class="day-slide" style="animation-delay:24s"><span>💋</span><p>Kiss Day — Love felt deeply</p></div>
+</div>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+    <h1>💘 Valentine’s Day is almost here</h1>
+    <p>The final moment is waiting…</p>
+    <div class="timer" id="countdown"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="card" id="mainContent">
+    <div class="big-heart">💖</div>
+    <h1>Happy Valentine’s Day ❤️</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        Every day led me here…<br>
+        every moment led me to you.<br><br>
+        Not just today,<br>
+        but every day — I choose you 💞<br>
+        Will You Be My Valentine?? ❤️
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <div style="margin-top:30px;">
+        <button id="yesBtn" onclick="sayYes()" style="background:#2ecc71;">
+            Yes 💖
+        </button>
+        <button id="noBtn" onclick="sayNo()" style="background:#e74c3c; margin-left:10px;">
+            No 💔
+        </button>
+    </div>
+</div>
+
+<div class="secret" id="secretMsg">
+💌 No matter what… my heart already chose you ❤️
+</div>
+
+<script>
+
+/* MODE CHECK (unchanged) */
+const params = new URLSearchParams(window.location.search);
+const fromDashboard = params.get("from") === "dashboard";
+
+const main = document.getElementById("mainContent");
+const lock = document.getElementById("lockScreen");
+
+const unlockDate = new Date("2026-02-14T00:00:00");
+
+if(fromDashboard){
+    main.style.display="none";
+    lock.style.display="block";
+    startCountdown();
+}
+
+function startCountdown(){
+    const cd=document.getElementById("countdown");
+    setInterval(()=>{
+        const now=new Date().getTime();
+        const diff=unlockDate-now;
+
+        if(diff<=0){
+            cd.innerHTML="💖 Unlocked!";
+            return;
+        }
+
+        const h=Math.floor(diff/(1000*60*60));
+        const m=Math.floor((diff/(1000*60))%60);
+        const s=Math.floor((diff/1000)%60);
+
+        cd.innerHTML=`${h}h ${m}m ${s}s`;
+    },1000);
+}
+
+/* TIME AWARE MESSAGE */
+const hour=new Date().getHours();
+const timeMsg=document.getElementById("timeMsg");
+
+if(hour<12) timeMsg.innerHTML="Good Morning, my forever 💕";
+else if(hour<17) timeMsg.innerHTML="Afternoon feels special with you 💞";
+else if(hour<21) timeMsg.innerHTML="Evening romance is in the air 🌆";
+else timeMsg.innerHTML="Late night… and I’m thinking of you 🌙";
+
+/* ROTATING LOVE LINES */
+const messages=[
+"💖 You are my favorite notification.",
+"✨ Loving you feels effortless.",
+"❤️ With you, everything makes sense.",
+"💞 You are my once in a lifetime."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* FLOATING HEARTS */
+for(let j=0;j<30;j++){
+let h=document.createElement("div");
+h.className="heart";
+h.innerHTML="💖";
+h.style.left=Math.random()*100+"vw";
+h.style.animationDuration=(6+Math.random()*7)+"s";
+document.body.appendChild(h);
+}
+
+/* HEART CURSOR */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="❤️";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* SECRET LONG PRESS */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+/* YES / NO LOGIC (UNCHANGED) */
+let noCount = 0;
+
+function sayNo(){
+    const noBtn = document.getElementById("noBtn");
+    const yesBtn = document.getElementById("yesBtn");
+
+    noCount++;
+
+    if(noCount === 1){
+        alert("😟 Are you sure?");
+    }
+    else if(noCount === 2){
+        alert("🥺 Think about it and answer again…");
+    }
+    else if(noCount === 3){
+        alert("😢 Okay… last chance to think 💔");
+        noBtn.remove();
+        return;
+    }
+
+    yesBtn.style.transform = `scale(${1 + noCount * 0.2})`;
+    noBtn.style.transform = `scale(${Math.max(0.6, 1 - noCount * 0.2)})`;
+}
+
+function sayYes(){
+    alert("💖 I knew it sweetheart 😍❤️\nYou were always going to say YES 😊💞");
+}
+</script>
+
+</body>
+</html>

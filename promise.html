@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Promise Day 🤍</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#fff7f0,#f7c8d0);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#5a2a2a;
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,255,255,0.85);
+    backdrop-filter:blur(16px);
+    border-radius:30px;
+    padding:38px 25px;
+    text-align:center;
+    width:92%;
+    max-width:500px;
+    box-shadow:0 0 35px rgba(255,180,190,0.6);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+h1{
+    font-size:28px;
+}
+
+.time-msg{
+    margin-top:6px;
+    font-size:14px;
+    opacity:0.8;
+}
+
+p{
+    margin-top:14px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* PROMISE CARDS */
+.promises{
+    margin-top:25px;
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:14px;
+}
+
+.promise{
+    perspective:800px;
+}
+
+.inner{
+    width:100%;
+    height:95px;
+    position:relative;
+    transform-style:preserve-3d;
+    transition:0.6s;
+    cursor:pointer;
+}
+
+.promise.flipped .inner{
+    transform:rotateY(180deg);
+}
+
+.promise.flipped{
+    box-shadow:0 0 18px rgba(255,150,170,0.6);
+    border-radius:18px;
+}
+
+.front, .back{
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:12px;
+    backface-visibility:hidden;
+}
+
+.front{
+    background:linear-gradient(135deg,#ffd6e0,#fff);
+    font-weight:600;
+}
+
+.back{
+    background:linear-gradient(135deg,#fff,#ffd6e0);
+    transform:rotateY(180deg);
+    font-size:14px;
+}
+
+/* BUTTON */
+button{
+    margin-top:25px;
+    padding:13px 30px;
+    border:none;
+    border-radius:30px;
+    background:linear-gradient(135deg,#ff8fab,#ff5f8a);
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    transition:0.3s;
+}
+button:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 18px rgba(255,140,170,0.6);
+}
+
+/* FLOATING LIGHT PARTICLES */
+.sparkle{
+    position:absolute;
+    font-size:16px;
+    animation:floatUp linear infinite;
+    opacity:0.4;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(110vh);opacity:0;}
+    50%{opacity:0.4;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.65);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+    color:white;
+}
+
+/* LOCK SCREEN */
+.lock-screen{
+    display:none;
+    text-align:center;
+    padding:30px;
+    color:white;
+}
+
+.timer{
+    margin-top:15px;
+    font-size:22px;
+    font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOCK SCREEN -->
+<div class="lock-screen" id="lockScreen">
+    <h1>🤍 Promise Day is almost here</h1>
+    <p>Some promises are meant to last forever…</p>
+    <div class="timer" id="countdown"></div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="card" id="mainContent">
+    <h1>Happy Promise Day 🤍</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        These aren’t just words,<br>
+        they’re promises from my heart to yours 💞<br><br>
+        Tap each card 🤍
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <div class="promises">
+        <div class="promise" onclick="flip(this)">
+            <div class="inner">
+                <div class="front">Promise 1 🤍</div>
+                <div class="back">I promise to stand by you in every phase of life</div>
+            </div>
+        </div>
+
+        <div class="promise" onclick="flip(this)">
+            <div class="inner">
+                <div class="front">Promise 2 🤍</div>
+                <div class="back">I promise to listen, even when it’s hard</div>
+            </div>
+        </div>
+
+        <div class="promise" onclick="flip(this)">
+            <div class="inner">
+                <div class="front">Promise 3 🤍</div>
+                <div class="back">I promise to protect your peace</div>
+            </div>
+        </div>
+
+        <div class="promise" onclick="flip(this)">
+            <div class="inner">
+                <div class="front">Promise 4 🤍</div>
+                <div class="back">I promise to grow with you, not away from you</div>
+            </div>
+        </div>
+    </div>
+
+    <button onclick="finalPromise()">One Last Promise 💍</button>
+</div>
+
+<div class="secret" id="secretMsg">
+💌 Even on the hardest days, I will choose us 🤍
+</div>
+
+<script>
+
+/* MODE CHECK */
+const params = new URLSearchParams(window.location.search);
+const fromDashboard = params.get("from") === "dashboard";
+
+const main = document.getElementById("mainContent");
+const lock = document.getElementById("lockScreen");
+
+const unlockDate = new Date("2026-02-11T00:00:00");
+
+if(fromDashboard){
+    main.style.display="none";
+    lock.style.display="block";
+    startCountdown();
+}
+
+function startCountdown(){
+    const cd=document.getElementById("countdown");
+    setInterval(()=>{
+        const now=new Date().getTime();
+        const diff=unlockDate-now;
+
+        if(diff<=0){
+            cd.innerHTML="🤍 Unlocked!";
+            return;
+        }
+
+        const h=Math.floor(diff/(1000*60*60));
+        const m=Math.floor((diff/(1000*60))%60);
+        const s=Math.floor((diff/1000)%60);
+
+        cd.innerHTML=`${h}h ${m}m ${s}s`;
+    },1000);
+}
+
+/* TIME MESSAGE */
+const hour=new Date().getHours();
+const timeMsg=document.getElementById("timeMsg");
+
+if(hour<12) timeMsg.innerHTML="Good Morning, my forever 🤍";
+else if(hour<17) timeMsg.innerHTML="Afternoon promises for you 💕";
+else if(hour<21) timeMsg.innerHTML="Evening vows from my heart 🌆";
+else timeMsg.innerHTML="Late night promises hit deeper 🌙";
+
+/* ROTATING LINES */
+const messages=[
+"🤍 I choose you — today and always.",
+"💞 Promises mean more when it's you.",
+"✨ With you, forever feels right.",
+"🌸 You are my commitment."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* FLOATING PARTICLES */
+for(let j=0;j<25;j++){
+let s=document.createElement("div");
+s.className="sparkle";
+s.innerText="✨";
+s.style.left=Math.random()*100+"vw";
+s.style.animationDuration=(6+Math.random()*6)+"s";
+document.body.appendChild(s);
+}
+
+/* HEART CURSOR */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="🤍";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+function flip(el){
+    el.classList.toggle("flipped");
+}
+
+function finalPromise(){
+    alert("🤍 I promise to choose you, every single day ❤️");
+}
+
+/* SECRET LONG PRESS */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+</script>
+
+</body>
+</html>

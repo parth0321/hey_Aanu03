@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propose Day 💍</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body{
+    height:100vh;
+    background:radial-gradient(circle at top,#ff1f4a,#5a0000);
+    overflow:hidden;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
+}
+
+/* MAIN CARD */
+.card{
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(18px);
+    border-radius:25px;
+    padding:38px 25px;
+    text-align:center;
+    width:90%;
+    max-width:430px;
+    box-shadow:0 0 30px rgba(255,80,120,0.5);
+    animation:fadeIn 2s ease;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;transform:scale(0.85);}
+    to{opacity:1;transform:scale(1);}
+}
+
+/* HEARTBEAT */
+.big-heart{
+    font-size:85px;
+    animation:beat 1.1s infinite;
+    filter:drop-shadow(0 0 12px #ff4d6d);
+}
+
+@keyframes beat{
+    0%,100%{transform:scale(1);}
+    50%{transform:scale(1.3);}
+}
+
+h1{
+    margin-top:12px;
+    font-size:28px;
+}
+
+.time-msg{
+    margin-top:6px;
+    font-size:14px;
+    opacity:0.9;
+}
+
+p{
+    margin-top:15px;
+    line-height:1.7;
+}
+
+/* ROTATING MESSAGE */
+.extra{
+    margin-top:12px;
+    font-style:italic;
+    opacity:0.95;
+    animation:fadeText 4s infinite;
+}
+
+@keyframes fadeText{
+    0%,100%{opacity:0;}
+    50%{opacity:1;}
+}
+
+/* HOLD BUTTON */
+button{
+    margin-top:24px;
+    padding:14px 28px;
+    border:none;
+    border-radius:30px;
+    background:#ff4d6d;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+}
+
+button::after{
+    content:"";
+    position:absolute;
+    left:0;
+    bottom:0;
+    height:100%;
+    width:0%;
+    background:rgba(255,255,255,0.3);
+    transition:width 1.5s linear;
+}
+
+button.holding::after{
+    width:100%;
+}
+
+/* SPARKLE PARTICLES */
+.sparkle{
+    position:absolute;
+    font-size:16px;
+    animation:floatUp linear infinite;
+    opacity:0.6;
+}
+
+@keyframes floatUp{
+    0%{transform:translateY(100vh);opacity:0;}
+    50%{opacity:0.6;}
+    100%{transform:translateY(-10vh);opacity:0;}
+}
+
+/* HEART CURSOR */
+.cursor-heart{
+    position:fixed;
+    font-size:14px;
+    pointer-events:none;
+    animation:fadeOut 1s forwards;
+}
+
+@keyframes fadeOut{
+    to{opacity:0;transform:translateY(-15px);}
+}
+
+/* SECRET MESSAGE */
+.secret{
+    position:fixed;
+    bottom:30px;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(0,0,0,0.7);
+    padding:12px 20px;
+    border-radius:20px;
+    display:none;
+    font-size:14px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="mainContent">
+    <div class="big-heart">❤️</div>
+    <h1>Happy Propose Day 💍</h1>
+    <div class="time-msg" id="timeMsg"></div>
+
+    <p>
+        Every heartbeat whispers your name… 💓<br><br>
+        I don’t need perfect words,<br>
+        just a lifetime with you 💖<br><br>
+        Will you walk beside me forever?
+    </p>
+
+    <div class="extra" id="extraMsg"></div>
+
+    <button id="holdBtn">Hold to Say Yes 💍</button>
+</div>
+
+<div class="secret" id="secretMsg">
+    💌 I imagined this moment a thousand times… and it was always you ❤️
+</div>
+
+<script>
+
+/* ---------------- TIME AWARE MESSAGE ---------------- */
+const timeMsg=document.getElementById("timeMsg");
+const hour=new Date().getHours();
+
+if(hour<12) timeMsg.innerHTML="Good Morning My Future ❤️";
+else if(hour<17) timeMsg.innerHTML="Good Afternoon My Heart 💕";
+else if(hour<21) timeMsg.innerHTML="Good Evening My Love 🌆";
+else timeMsg.innerHTML="Late night thoughts… about us 🌙";
+
+/* ---------------- ROTATING PROPOSAL LINES ---------------- */
+const messages=[
+"💍 My world feels right with you in it.",
+"❤️ You are not just my choice, you are my certainty.",
+"✨ I see my future when I look at you.",
+"💖 I want every tomorrow with you."
+];
+
+let i=0;
+setInterval(()=>{
+document.getElementById("extraMsg").innerText=messages[i];
+i=(i+1)%messages.length;
+},4000);
+
+/* ---------------- SPARKLE PARTICLES ---------------- */
+for(let j=0;j<25;j++){
+let s=document.createElement("div");
+s.className="sparkle";
+s.innerText="✨";
+s.style.left=Math.random()*100+"vw";
+s.style.animationDuration=(5+Math.random()*5)+"s";
+document.body.appendChild(s);
+}
+
+/* ---------------- HEART CURSOR TRAIL ---------------- */
+document.addEventListener("mousemove",function(e){
+let heart=document.createElement("div");
+heart.className="cursor-heart";
+heart.innerText="💖";
+heart.style.left=e.pageX+"px";
+heart.style.top=e.pageY+"px";
+document.body.appendChild(heart);
+setTimeout(()=>heart.remove(),1000);
+});
+
+/* ---------------- HOLD TO PROPOSE ---------------- */
+let holdBtn=document.getElementById("holdBtn");
+let holdTimer;
+
+holdBtn.addEventListener("mousedown",()=>{
+holdBtn.classList.add("holding");
+holdTimer=setTimeout(()=>{
+alert("💍 She said YES! ❤️\nMy heart belongs to you forever 💖");
+},1500);
+});
+
+holdBtn.addEventListener("mouseup",()=>{
+holdBtn.classList.remove("holding");
+clearTimeout(holdTimer);
+});
+
+holdBtn.addEventListener("touchstart",()=>{
+holdBtn.classList.add("holding");
+holdTimer=setTimeout(()=>{
+alert("💍 She said YES! ❤️\nMy heart belongs to you forever 💖");
+},1500);
+});
+
+holdBtn.addEventListener("touchend",()=>{
+holdBtn.classList.remove("holding");
+clearTimeout(holdTimer);
+});
+
+/* ---------------- SECRET LONG PRESS ---------------- */
+let pressTimer;
+document.addEventListener("mousedown",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("mouseup",()=>clearTimeout(pressTimer));
+
+document.addEventListener("touchstart",()=>{
+pressTimer=setTimeout(()=>{
+let s=document.getElementById("secretMsg");
+s.style.display="block";
+setTimeout(()=>s.style.display="none",3000);
+},2000);
+});
+document.addEventListener("touchend",()=>clearTimeout(pressTimer));
+
+</script>
+
+</body>
+</html>
