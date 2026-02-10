@@ -23,7 +23,6 @@ body{
     color:#ffd6e0;
 }
 
-/* MAIN CARD */
 .card{
     background:rgba(255,0,60,0.1);
     backdrop-filter:blur(18px);
@@ -41,7 +40,6 @@ body{
     to{opacity:1;transform:scale(1);}
 }
 
-/* BIG KISS */
 .big-kiss{
     font-size:95px;
     animation:pulse 3s ease-in-out infinite;
@@ -52,23 +50,10 @@ body{
     50%{transform:scale(1.12);}
 }
 
-h1{
-    margin-top:14px;
-    font-size:28px;
-}
+h1{margin-top:14px;font-size:28px;}
+.time-msg{margin-top:6px;font-size:14px;opacity:0.85;}
+p{margin-top:18px;line-height:1.7;}
 
-.time-msg{
-    margin-top:6px;
-    font-size:14px;
-    opacity:0.85;
-}
-
-p{
-    margin-top:18px;
-    line-height:1.7;
-}
-
-/* ROTATING MESSAGE */
 .extra{
     margin-top:12px;
     font-style:italic;
@@ -80,7 +65,6 @@ p{
     50%{opacity:1;}
 }
 
-/* BUTTON */
 button{
     margin-top:30px;
     padding:13px 32px;
@@ -97,7 +81,6 @@ button:hover{
     box-shadow:0 0 25px rgba(255,80,120,0.8);
 }
 
-/* KISS EFFECT */
 .kiss-effect{
     animation:kissGlow 0.8s ease-in-out;
 }
@@ -108,7 +91,6 @@ button:hover{
     100%{box-shadow:0 0 45px rgba(255,60,100,0.5);}
 }
 
-/* FLOATING KISS PARTICLES */
 .kiss{
     position:absolute;
     font-size:20px;
@@ -122,7 +104,6 @@ button:hover{
     100%{transform:translateY(-10vh);opacity:0;}
 }
 
-/* HEART CURSOR */
 .cursor-heart{
     position:fixed;
     font-size:14px;
@@ -134,7 +115,6 @@ button:hover{
     to{opacity:0;transform:translateY(-15px);}
 }
 
-/* SECRET MESSAGE */
 .secret{
     position:fixed;
     bottom:30px;
@@ -148,7 +128,6 @@ button:hover{
     color:white;
 }
 
-/* LOCK SCREEN */
 .lock-screen{
     display:none;
     text-align:center;
@@ -166,14 +145,12 @@ button:hover{
 
 <body>
 
-<!-- LOCK SCREEN -->
 <div class="lock-screen" id="lockScreen">
     <h1>💋 Kiss Day is almost here</h1>
     <p>This moment is meant to be felt…</p>
     <div class="timer" id="countdown"></div>
 </div>
 
-<!-- MAIN CONTENT -->
 <div class="card" id="mainContent">
     <div class="big-kiss">💋</div>
     <h1>Happy Kiss Day ❤️</h1>
@@ -205,21 +182,26 @@ const main=document.getElementById("mainContent");
 const lock=document.getElementById("lockScreen");
 
 const unlockDate=new Date("2026-02-13T00:00:00");
+const now=new Date();
 
-if(fromDashboard){
+/* FIXED UNLOCK CONDITION */
+if(fromDashboard && now < unlockDate){
     main.style.display="none";
     lock.style.display="block";
     startCountdown();
+}else{
+    main.style.display="block";
+    lock.style.display="none";
 }
 
 function startCountdown(){
     const cd=document.getElementById("countdown");
     setInterval(()=>{
-        const now=new Date().getTime();
-        const diff=unlockDate-now;
+        const nowTime=new Date().getTime();
+        const diff=unlockDate-nowTime;
 
         if(diff<=0){
-            cd.innerHTML="💋 Unlocked!";
+            location.reload();
             return;
         }
 
@@ -231,7 +213,8 @@ function startCountdown(){
     },1000);
 }
 
-/* TIME AWARE MESSAGE */
+/* --- EVERYTHING BELOW UNCHANGED --- */
+
 const hour=new Date().getHours();
 const timeMsg=document.getElementById("timeMsg");
 
@@ -240,7 +223,6 @@ else if(hour<17) timeMsg.innerHTML="Afternoon kiss just for you 💞";
 else if(hour<21) timeMsg.innerHTML="Evening feels romantic tonight 🌆";
 else timeMsg.innerHTML="Late night kisses hit deeper 🌙";
 
-/* ROTATING INTENSE LINES */
 const messages=[
 "💞 A kiss can say what words cannot.",
 "❤️ Every kiss feels like magic.",
@@ -255,7 +237,6 @@ document.getElementById("extraMsg").innerText=messages[i];
 i=(i+1)%messages.length;
 },4000);
 
-/* FLOATING KISSES */
 for(let j=0;j<25;j++){
 let k=document.createElement("div");
 k.className="kiss";
@@ -265,7 +246,6 @@ k.style.animationDuration=(6+Math.random()*7)+"s";
 document.body.appendChild(k);
 }
 
-/* HEART CURSOR */
 document.addEventListener("mousemove",function(e){
 let heart=document.createElement("div");
 heart.className="cursor-heart";
@@ -276,14 +256,12 @@ document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),1000);
 });
 
-/* SEND KISS */
 function sendKiss(){
     main.classList.add("kiss-effect");
     setTimeout(()=>main.classList.remove("kiss-effect"),800);
     alert("💋 A soft, loving kiss just reached you ❤️");
 }
 
-/* SECRET LONG PRESS */
 let pressTimer;
 document.addEventListener("mousedown",()=>{
 pressTimer=setTimeout(()=>{
