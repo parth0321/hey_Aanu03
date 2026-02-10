@@ -52,23 +52,10 @@ body{
     50%{transform:translateY(-14px);}
 }
 
-h1{
-    margin-top:12px;
-    font-size:28px;
-}
+h1{margin-top:12px;font-size:28px;}
+.time-msg{margin-top:6px;font-size:14px;opacity:0.8;}
+p{margin-top:14px;line-height:1.7;}
 
-.time-msg{
-    margin-top:6px;
-    font-size:14px;
-    opacity:0.8;
-}
-
-p{
-    margin-top:14px;
-    line-height:1.7;
-}
-
-/* ROTATING MESSAGE */
 .extra{
     margin-top:12px;
     font-style:italic;
@@ -80,7 +67,6 @@ p{
     50%{opacity:1;}
 }
 
-/* BUTTON */
 button{
     margin-top:25px;
     padding:13px 30px;
@@ -97,11 +83,9 @@ button:hover{
     box-shadow:0 0 18px rgba(255,120,160,0.7);
 }
 
-/* BIG HUG EFFECT */
 .hug{
     animation:hug 0.7s ease-in-out;
 }
-
 @keyframes hug{
     0%{transform:scale(1);}
     50%{transform:scale(1.08);}
@@ -203,23 +187,29 @@ const fromDashboard = params.get("from") === "dashboard";
 const main = document.getElementById("mainContent");
 const lock = document.getElementById("lockScreen");
 
-/* DATE */
+/* UNLOCK DATE */
 const unlockDate = new Date("2026-02-10T00:00:00");
+const now = new Date();
 
-if(fromDashboard){
+/* FIXED UNLOCK CONDITION */
+if(fromDashboard && now < unlockDate){
     main.style.display="none";
     lock.style.display="block";
     startCountdown();
+}else{
+    main.style.display="block";
+    lock.style.display="none";
 }
 
+/* COUNTDOWN */
 function startCountdown(){
     const cd=document.getElementById("countdown");
     setInterval(()=>{
-        const now=new Date().getTime();
-        const diff=unlockDate-now;
+        const nowTime=new Date().getTime();
+        const diff=unlockDate-nowTime;
 
         if(diff<=0){
-            cd.innerHTML="🧸 Unlocked!";
+            location.reload();
             return;
         }
 
@@ -231,7 +221,7 @@ function startCountdown(){
     },1000);
 }
 
-/* TIME AWARE MESSAGE */
+/* TIME MESSAGE */
 const timeMsg=document.getElementById("timeMsg");
 const hour=new Date().getHours();
 
@@ -240,7 +230,7 @@ else if(hour<17) timeMsg.innerHTML="Afternoon cuddles incoming 💕";
 else if(hour<21) timeMsg.innerHTML="Evening hugs just for you 🌆";
 else timeMsg.innerHTML="Late night? Come here, virtual hug 🤍";
 
-/* ROTATING WARM MESSAGES */
+/* ROTATING MESSAGES */
 const messages=[
 "🧸 You are my safe place.",
 "🤍 With you, I feel home.",
@@ -255,7 +245,7 @@ document.getElementById("extraMsg").innerText=messages[i];
 i=(i+1)%messages.length;
 },4000);
 
-/* FLOATING PLUSH PARTICLES */
+/* FLOATING PLUSH */
 for(let j=0;j<25;j++){
 let p=document.createElement("div");
 p.className="plush";
