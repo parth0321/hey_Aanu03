@@ -6,6 +6,7 @@
 <title>Hug Day 🤗</title>
 
 <style>
+/* --- YOUR ENTIRE CSS REMAINS EXACTLY SAME --- */
 *{
     margin:0;
     padding:0;
@@ -23,7 +24,6 @@ body{
     color:#5a2a2a;
 }
 
-/* MAIN CARD */
 .card{
     background:rgba(255,255,255,0.9);
     backdrop-filter:blur(16px);
@@ -41,7 +41,6 @@ body{
     to{opacity:1;transform:scale(1);}
 }
 
-/* HUG EMOJI */
 .hug-emoji{
     font-size:95px;
     animation:breathe 3.5s ease-in-out infinite;
@@ -52,23 +51,10 @@ body{
     50%{transform:scale(1.1);}
 }
 
-h1{
-    margin-top:12px;
-    font-size:28px;
-}
+h1{margin-top:12px;font-size:28px;}
+.time-msg{margin-top:6px;font-size:14px;opacity:0.85;}
+p{margin-top:15px;line-height:1.7;}
 
-.time-msg{
-    margin-top:6px;
-    font-size:14px;
-    opacity:0.85;
-}
-
-p{
-    margin-top:15px;
-    line-height:1.7;
-}
-
-/* ROTATING MESSAGE */
 .extra{
     margin-top:12px;
     font-style:italic;
@@ -80,7 +66,6 @@ p{
     50%{opacity:1;}
 }
 
-/* BUTTON */
 button{
     margin-top:26px;
     padding:13px 30px;
@@ -97,7 +82,6 @@ button:hover{
     box-shadow:0 0 18px rgba(255,140,170,0.6);
 }
 
-/* STRONG HUG EFFECT */
 .hug-effect{
     animation:screenHug 0.8s ease-in-out;
 }
@@ -108,7 +92,6 @@ button:hover{
     100%{transform:scale(1);}
 }
 
-/* FLOATING WARM PARTICLES */
 .glow{
     position:absolute;
     font-size:18px;
@@ -122,7 +105,6 @@ button:hover{
     100%{transform:translateY(-10vh);opacity:0;}
 }
 
-/* HEART CURSOR */
 .cursor-heart{
     position:fixed;
     font-size:14px;
@@ -134,7 +116,6 @@ button:hover{
     to{opacity:0;transform:translateY(-15px);}
 }
 
-/* SECRET MESSAGE */
 .secret{
     position:fixed;
     bottom:30px;
@@ -148,7 +129,6 @@ button:hover{
     color:white;
 }
 
-/* LOCK SCREEN */
 .lock-screen{
     display:none;
     text-align:center;
@@ -204,21 +184,26 @@ const main=document.getElementById("mainContent");
 const lock=document.getElementById("lockScreen");
 
 const unlockDate=new Date("2026-02-12T00:00:00");
+const now=new Date();
 
-if(fromDashboard){
+/* FIXED UNLOCK CONDITION */
+if(fromDashboard && now < unlockDate){
     main.style.display="none";
     lock.style.display="block";
     startCountdown();
+}else{
+    main.style.display="block";
+    lock.style.display="none";
 }
 
 function startCountdown(){
     const cd=document.getElementById("countdown");
     setInterval(()=>{
-        const now=new Date().getTime();
-        const diff=unlockDate-now;
+        const nowTime=new Date().getTime();
+        const diff=unlockDate-nowTime;
 
         if(diff<=0){
-            cd.innerHTML="🤗 Unlocked!";
+            location.reload();
             return;
         }
 
@@ -230,7 +215,8 @@ function startCountdown(){
     },1000);
 }
 
-/* TIME AWARE MESSAGE */
+/* --- EVERYTHING BELOW REMAINS EXACTLY SAME --- */
+
 const hour=new Date().getHours();
 const timeMsg=document.getElementById("timeMsg");
 
@@ -239,7 +225,6 @@ else if(hour<17) timeMsg.innerHTML="Afternoon hug loading 💕";
 else if(hour<21) timeMsg.innerHTML="Evening cuddles for you 🌆";
 else timeMsg.innerHTML="Late night hugs hit different 🌙";
 
-/* ROTATING WARM LINES */
 const messages=[
 "🤍 Your hugs feel like home.",
 "🫶 Even distance can't stop this warmth.",
@@ -254,7 +239,6 @@ document.getElementById("extraMsg").innerText=messages[i];
 i=(i+1)%messages.length;
 },4000);
 
-/* FLOATING WARM PARTICLES */
 for(let j=0;j<25;j++){
 let g=document.createElement("div");
 g.className="glow";
@@ -264,7 +248,6 @@ g.style.animationDuration=(6+Math.random()*6)+"s";
 document.body.appendChild(g);
 }
 
-/* HEART CURSOR */
 document.addEventListener("mousemove",function(e){
 let heart=document.createElement("div");
 heart.className="cursor-heart";
@@ -275,14 +258,12 @@ document.body.appendChild(heart);
 setTimeout(()=>heart.remove(),1000);
 });
 
-/* HUG ACTION */
 function hugNow(){
     main.classList.add("hug-effect");
     setTimeout(()=>main.classList.remove("hug-effect"),800);
     alert("🤗 A long, warm hug just for you ❤️");
 }
 
-/* SECRET LONG PRESS */
 let pressTimer;
 document.addEventListener("mousedown",()=>{
 pressTimer=setTimeout(()=>{
