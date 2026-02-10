@@ -228,7 +228,7 @@ button:hover{transform:scale(1.1);}
 
 <script>
 
-/* MODE CHECK (unchanged) */
+/* MODE CHECK */
 const params = new URLSearchParams(window.location.search);
 const fromDashboard = params.get("from") === "dashboard";
 
@@ -236,21 +236,26 @@ const main = document.getElementById("mainContent");
 const lock = document.getElementById("lockScreen");
 
 const unlockDate = new Date("2026-02-14T00:00:00");
+const now = new Date();
 
-if(fromDashboard){
+/* FIXED UNLOCK LOGIC */
+if(fromDashboard && now < unlockDate){
     main.style.display="none";
     lock.style.display="block";
     startCountdown();
+}else{
+    main.style.display="block";
+    lock.style.display="none";
 }
 
 function startCountdown(){
     const cd=document.getElementById("countdown");
     setInterval(()=>{
-        const now=new Date().getTime();
-        const diff=unlockDate-now;
+        const nowTime=new Date().getTime();
+        const diff=unlockDate-nowTime;
 
         if(diff<=0){
-            cd.innerHTML="💖 Unlocked!";
+            location.reload();   // auto unlock at 12:00 AM
             return;
         }
 
@@ -261,6 +266,8 @@ function startCountdown(){
         cd.innerHTML=`${h}h ${m}m ${s}s`;
     },1000);
 }
+
+/* ---- EVERYTHING BELOW UNCHANGED ---- */
 
 /* TIME AWARE MESSAGE */
 const hour=new Date().getHours();
@@ -354,7 +361,5 @@ function sayNo(){
 function sayYes(){
     alert("💖 I knew it sweetheart 😍❤️\nYou were always going to say YES 😊💞");
 }
-</script>
 
-</body>
-</html>
+</script>
